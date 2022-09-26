@@ -24,7 +24,9 @@ def test_streaming():
     sleep(3)
 
     # Save QR code from the Webcam as PNG
-    driver.find_element(By.ID, "webcam-test").screenshot("qr.png")
+    element = driver.find_element(By.ID, "webcam-test")
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+    element.screenshot("qr.png")
 
     driver.close()
 
