@@ -1,30 +1,41 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import pytest
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from time import sleep
+from pyzbar.pyzbar import decode
+from PIL import Image
 
-chrome_options = Options()
-chrome_options.add_argument("--start-maximized")
-chrome_options.add_argument("use-fake-ui-for-media-stream")
-chrome_options.add_argument("--use-file-for-fake-video-capture=C:\\Users\\selfe\\PycharmProjects\\streaming_test"
-                            "\\newfile.mjpeg")
 
-driver = webdriver.Chrome(service=Service('chromedriver.exe'), chrome_options=chrome_options)
+def test_streaming():
+    chrome_options = Options()
+    chrome_options.add_argument("--use-fake-device-for-media-stream")
+    chrome_options.add_argument(f"--use-file-for-fake-video-capture=C:\\Users\\selfe\\PycharmProjects\\streaming_test"
+                                f"\\Videos\\newfile.mjpeg")
+    chrome_options.add_experimental_option("prefs", {
+        "profile.default_content_setting_values.media_stream_camera": 1})
+    chrome_options.add_argument("--start-maximized")
 
-driver.get("https://webcamtests.com/")
-wait = WebDriverWait(driver, 20)
+    driver = webdriver.Chrome(service=Service('chromedriver.exe'), options=chrome_options)
 
-start_streaming = wait.until(
-        EC.presence_of_element_located((By.ID, "webcam-launcher"))
+    driver.get("https://www.onlinemictest.com/webcam-test/")
+    wait = WebDriverWait(driver, 20)
+
+    # Turn on the Webcam
+    wait.until(
+        EC.element_to_be_clickable((By.ID, "webcam-start"))
     ).click()
 
-sleep(5)
-# driver.find_element(By.ID, 'userEmail').send_keys("david_test@gmail.com")
+    sleep(3)
 
-driver.close()
+    # Save QR code from the Webcam
+    driver.find_element(By.ID, "webcam-test").screenshot("qr.png")
+
+    driver.close()
+
+    decocde_qr = decode(Image.open('qr.png'))
+    decoded = decocde_qr[0].data.decode('ascii')
+
+    assert decoded == "DevOps Conference"
