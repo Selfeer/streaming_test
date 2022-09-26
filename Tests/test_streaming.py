@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import pytest
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -10,8 +12,8 @@ from time import sleep
 chrome_options = Options()
 chrome_options.add_argument("--start-maximized")
 chrome_options.add_argument("use-fake-ui-for-media-stream")
-chrome_options.add_argument("--use-file-for-fake-video-capture=C:\\Users\\Selfeer\\PycharmProjects\\streaming_test"
-                            "\\test_video.m4v")
+chrome_options.add_argument("--use-file-for-fake-video-capture=C:\\Users\\selfe\\PycharmProjects\\streaming_test"
+                            "\\newfile.mjpeg")
 
 driver = webdriver.Chrome(service=Service('chromedriver.exe'), chrome_options=chrome_options)
 
