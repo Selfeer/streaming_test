@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
+from file_path import get_path
 from pyzbar.pyzbar import decode
 from PIL import Image
 
@@ -12,8 +13,7 @@ from PIL import Image
 def test_streaming():
     chrome_options = Options()
     chrome_options.add_argument("--use-fake-device-for-media-stream")
-    chrome_options.add_argument(f"--use-file-for-fake-video-capture=C:\\Users\\selfe\\PycharmProjects\\streaming_test"
-                                f"\\Videos\\newfile.mjpeg")
+    chrome_options.add_argument("--use-file-for-fake-video-capture=" + get_path("newfile.mjpeg"))
     chrome_options.add_experimental_option("prefs", {
         "profile.default_content_setting_values.media_stream_camera": 1})
     chrome_options.add_argument("--start-maximized")
@@ -30,12 +30,13 @@ def test_streaming():
 
     sleep(3)
 
-    # Save QR code from the Webcam
+    # Save QR code from the Webcam as PNG
     driver.find_element(By.ID, "webcam-test").screenshot("qr.png")
 
     driver.close()
 
-    decocde_qr = decode(Image.open('qr.png'))
+    # Get Text from the QR
+    decocde_qr = decode(Image.open(get_path('qr.png')))
     decoded = decocde_qr[0].data.decode('ascii')
 
     assert decoded == "DevOps Conference"
