@@ -31,7 +31,7 @@ def test_streaming():
     driver.close()
 
     # Get Text from the QR
-    decocde_qr = decode(Image.open(get_path('qr.png')))
-    decoded = decocde_qr[0].data.decode('ascii')
+    decode_qr = decode(Image.open(get_path('qr.png')))
+    decoded = decode_qr[0].data.decode('ascii')
 
     assert decoded == "DevOps Conference"
